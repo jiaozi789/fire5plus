@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			/**
+			 * 调用系统摄像头程序
+ 			mui.plusReady(function() {
+				var cmr = plus.camera.getCamera();
+				setTimeout(function(){
+						console.log(cmr);
+						cmr.captureImage(function(p){
+							console.log(p);
+							document.getElementById("showImg").setAttribute("src", p);
+							console.log(mui("#showImg").attr("src"));
+						},function(error){
+							console.error(error.message);
+						},{
+							filename:"_doc/camera/a.jpg"
+						});
+						
+						},1000);
+			});
+			**/
+			
+			
+			// 设置事件监听，DOM内容加载完成，和jQuery的$.ready() 效果差不多。
+	window.addEventListener("DOMContentLoaded", function() {
+		// canvas 元素将用于抓拍
+		var canvas = document.getElementById("canvas"),
+			context = canvas.getContext("2d"),
+			// video 元素，将用于接收并播放摄像头 的数据流
+			video = document.getElementById("video"),
+			videoObj = { "video": true },
+			// 一个出错的回调函数，在控制台打印出错信息
+			errBack = function(error) {
+				if("object" === typeof window.console){
+					console.log("Video capture error: ", error.code); 
+				}
+			};
+ 		console.log(navigator.getUserMedia);
+ 		console.log(navigator.mediaDevices.getUserMedia);
+		// Put video listeners into place
+		// 针对标准的浏览器
+		if(navigator.mediaDevices.getUserMedia) { // Standard
+			console.log("hello");
+			navigator.mediaDevices.getUserMedia(videoObj, function(stream) {
+				console.log(stream);
+				video.src = stream;
+				video.play();
+			}, errBack);
+		} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+			navigator.webkitGetUserMedia(videoObj, function(stream){
+				video.src = window.webkitURL.createObjectURL(stream);
+				video.play();
+			}, errBack);
+		}
+		// 对拍照按钮的事件监听
+		document.getElementById("snap").addEventListener("click", function() {
+			// 画到画布上
+			context.drawImage(video, 0, 0, 640, 480);
+		});
+ 
+	}, false);
+
+			
+			
+		</script>
+	</body>
+	<div>
+		<!-- 
+		声明： 此div应该在允许使用webcam，网络摄像头之后动态生成
+		宽高： 640 *480,当然，可以动态控制啦!
+		-->
+		<video id="video" width="640" height="480" autoplay></video>
+		<button id="snap">Snap Photo</button>
+		<canvas id="canvas" width="640" height="480"></canvas>
+	</div>
+
+</html>

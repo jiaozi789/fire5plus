@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			//var requestServer="http://jiaozi.free.idcfengye.com/";
+			var requestServer="http://192.168.1.3:8888/";
+			mui.init()
+			mui.plusReady(function() {
+				var videoUrl=plus.webview.currentWebview().videoUrl;
+			 	var player = null;
+			     // 创建视频播放控件
+				if(!player){
+					var burl=requestServer+"/video?fileName="+videoUrl;
+					console.log(burl);
+					//下载速度慢 无法播放
+					player =plus.video.createVideoPlayer('myvideo', {
+						src:"https://api.huoshan.com/hotsoon/item/video/_playback/?video_id=v0300c770000bd3etocqn5h11f3dak50&line=0&app_id=1112&vquality=normal&quality=720p",
+						top:'0px',
+						left:'0px',
+						autoplay:true,
+						loop:true,
+						position: 'static'
+					});
+					plus.webview.currentWebview().append(player);
+					player.open();
+					player.play();
+			}});
+		</script>
+	</body>
+
+</html>
