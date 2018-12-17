@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+	<head>
+		<!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *;script-src * 'unsafe-inline'">
+-->
+	
+	<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no" charset="utf-8">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<style>
+			* { touch-action: none; } 
+			
+		</style>
+		<script type="text/javascript" charset="utf-8">
+		    var activeTab=null;
+			mui.init();
+			mui.plusReady(function() {
+				
+			    //要切换的子页面
+			    var subpages=[
+			    'home.html',
+			    'gz1.html',
+			    'gz2.html',
+			    'gz3.html'];
+			    //子页面样式，这里只有主页的底部是公用的，所以距离底部51个px,距离顶部0个px
+			    var subpage_style = {
+			        top: '0px',
+			        bottom: '51px'
+			    };
+			
+				//获取当前的webview
+			    var self = plus.webview.currentWebview();
+			
+			    for (var i = 0; i < subpages.length; i++) {
+			        var temp = {};
+			        //WebviewObject plus.webview.create( url, id, styles, extras );
+			        var sub = plus.webview.create(subpages[i],subpages[i],subpage_style,{});
+			        
+			        if (i > 0) {
+			            sub.hide();
+			        }else{
+			        	//当前激活选项
+			            activeTab = subpages[0];
+			        }
+			        self.append(sub);
+			    }
+			    //选项卡点击事件
+			    mui('.mui-bar-tab').on('tap', 'a', function(e) {
+			        var targetTab = this.getAttribute('href');
+			        //点击了+号
+			        if(targetTab==null){
+			        	
+			        }
+			        console.log(targetTab+"---"+activeTab);
+			        if (targetTab == activeTab) {
+			            return;
+			        }
+			        var preActiveTab=activeTab;
+			        //显示目标选项卡
+			        //若为iOS平台或非首次显示，则直接显示
+			        if(mui.os.ios){
+			            plus.webview.show(targetTab);
+			        }else{
+			            //否则，使用fade-in动画，且保存变量 
+			            plus.webview.show(targetTab,"fade-in",300);
+			        } 
+			        //隐藏当前;
+			        plus.webview.hide(preActiveTab);
+			        //更改当前活跃的选项卡
+			        activeTab = targetTab;
+			    });
+			    
+			});
+		</script>
+		<title>Hello World</title>
+	</head>
+
+	<body>
+		
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="home.html">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="gz1.html">
+				<span class="mui-icon mui-icon mui-icon-personadd"></span>
+				<span class="mui-tab-label">关注</span>
+			</a>
+			<a class="mui-tab-item">
+				<button type="button" style="margin-bottom: 10px;" class="mui-btn mui-btn-danger">+</button>
+			</a>
+			<a class="mui-tab-item" href="gz3.html">
+				<span class="mui-icon mui-icon-email"></span>
+				<span class="mui-tab-label">消息</span>
+			</a>
+			<a class="mui-tab-item" href="gz4.html">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+	</body>
+
+</html>

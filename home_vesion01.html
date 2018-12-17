@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+	<head>
+		<!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+-->
+		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *;script-src * 'unsafe-inline'">-->
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no" charset="utf-8">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				pullRefresh: {
+					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50, //可选,默认50.触发下拉刷新拖动距离,
+						auto: false, //可选,默认false.首次加载自动下拉刷新一次
+						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+						contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容； 
+						callback: function() {
+							var rthis=this;
+							query(function(data){
+								if(data.length==0){
+									//没有数据了 不能拉了
+									rthis.endPullupToRefresh(true);
+								}
+								//数据加载完成将正在加载去掉 false表示还有数据可以继续拉
+								rthis.endPullupToRefresh(false);
+							});
+							//mui('#refreshContainer').pullRefresh().refresh(true);
+							 //this.endPullupToRefresh(true); 没有数据了 就调用这个函数
+						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					}
+				}
+			});
+			var requestServer="http://jiaozi.free.idcfengye.com/";
+			var start=0;
+			var length=6;
+			function query(fn){
+				mui.ajax({
+					url:requestServer+"list?start="+start+"&length="+length,
+					crossDomain:true,
+					dataType:'json',
+					success:function(data){
+						console.log(JSON.stringify(data));
+						mui.each(data,function(index,item){
+							if(index % 2!=0 ){
+								return;
+							}
+							var imgPath=requestServer+"view?fileName=";
+							var headerHtml="<div id='r_"+index+"' class='mui-row'>";
+							var firstImage="<div id='r_"+index+"_c_0' class='mui-col-sm-6 mui-col-xs-6'>"+
+							"	<li class='mui-table-view-cell imageView' videoUrl='"+item.playerUrl+"' style='background-image: url("+(imgPath+item.imageUrl)+");background-size: cover;'>"+
+							"	<div style='font-size:15px;font-weight:bold;color:white;padding-bottom:180px;width:150%'>"+item.showTitle+"</div> "+
+							"</li>"+
+							"</div>";
+							var secondImage="";
+							if((index+1)<data.length){
+								secondImage="<div id='r_"+index+"_c_1' class='mui-col-sm-6 mui-col-xs-6' >"+
+								"	<li class='mui-table-view-cell imageView' videoUrl='"+data[index+1].playerUrl+"' style='background-image: url("+(imgPath+data[index+1].imageUrl)+");background-size: cover;'>"+
+								"	<div style='font-size:15px;font-weight:bold;color:white;padding-top:180px;width:150%'>"+data[index+1].showTitle+"</div> "+
+								"	</li>"+
+								"</div>";
+							}
+						   var footHtml="</div>";
+						   var newEle=headerHtml+firstImage+secondImage+footHtml;
+						   mui("#contentView")[0].innerHTML=mui("#contentView")[0].innerHTML+newEle;
+						   //var firstRowElement=mui("#r_"+index);
+						   /*
+						   var firstColElement=mui("#r_"+index+"_c_0")[0];
+						   //算出第一个div显示文字的文字 行离圆点的高度-20
+						   var showTop=firstColElement.offsetTop+firstColElement.offsetHeight/12*11;
+						   //离左侧的距离 div离左侧的距离+跨度的 1/5
+						   var showLeft=firstColElement.offsetLeft+firstColElement.offsetWidth/20;
+						   //debugger
+						   var showDiv=document.createElement("div");
+						   console.log(item.showTitle);
+						   showDiv.innerHTML=item.showTitle;
+						   //showDiv.style.backgroundColor="red";
+						   //showDiv.style.borderStyle="1px solid green";
+						   showDiv.style.position="absolute";
+						   showDiv.style.fontWeight="bold";
+						   showDiv.style.fontSize="15px";
+						   showDiv.style.color="white";
+						   console.log("#r_"+index+"_c_0"+showLeft+"----"+showTop);
+						   
+						   showDiv.style.left=showLeft+"px";
+						   showDiv.style.top=showTop+"px";
+						  
+						   
+						   showDiv.style.zIndex=100;
+						    document.body.appendChild(showDiv);
+						    **/
+						})
+						start+=6;
+						if(fn)
+							fn(data);
+						mui('.mui-col-sm-6').on('tap', 'li', function(e) {
+						 	var videoUrl=(this.getAttribute("videoUrl"));
+						 	var player = null;
+						     // 创建视频播放控件
+							if(!player){
+								var burl=requestServer+"/video?fileName="+videoUrl;
+								console.log(burl);
+								//下载速度慢 无法播放
+								player =plus.video.createVideoPlayer('myvideo', {
+									src:"https://api.huoshan.com/hotsoon/item/video/_playback/?video_id=v0300c770000bd3etocqn5h11f3dak50&line=0&app_id=1112&vquality=normal&quality=720p",
+									top:'0px',
+									left:'0px',
+									width: '100%',
+									height: '120%',
+									position: 'static'
+								});
+								plus.webview.currentWebview().hide();
+								//plus.webview.getTopWebview().hide();
+								plus.webview.getTopWebview().append(player);
+								player.open();
+								player.play();
+							}
+
+						 });
+				 	
+					}
+				})
+			}
+			//初始化事件
+			mui(function(){
+				query();
+				document.addEventListener("deviceready", onDeviceReady, false);
+				function onDeviceReady() {
+				    console.log(navigator.camera);
+				    alert("chushihua");
+				}
+				//监听点击事件
+				mui("#camera")[0].addEventListener("tap",function(){
+					alert("ggg");
+				});
+				
+			})
+		</script>
+		<title>Hello World</title>
+	</head>
+ 
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<!--mui-row表示一行 MUI里面也是使用的十二列的栅格系统。  mui-cos-xs-11佔用11格-->
+			<div class="mui-row">
+				<div class="mui-col-xs-2">
+					<span class="mui-icon mui-icon-search"></span>
+
+				</div>
+				<div class="mui-col-xs-9">
+					<div class="mui-row">
+						<div class="mui-col-xs-4">
+							<span class="mui-icon">视频 </span>
+
+						</div>
+						<div class="mui-col-xs-4">
+							<span class="mui-icon">直播</span>
+
+						</div>
+						<div class="mui-col-xs-4">
+							<span class="mui-icon">同城</span>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="mui-col-xs-1">
+					<span id="camera" class="mui-icon mui-icon-camera"></span>
+				</div>
+			</div>
+
+		</header>
+
+		<div class="mui-content" >
+
+			<!--下拉刷新容器-->
+			<div id="refreshContainer" class="mui-content mui-scroll-wrapper" style="margin-top: 0px;">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul id="contentView" class="mui-table-view mui-table-view-chevron">
+
+						
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		
+	</body>
+
+</html>
