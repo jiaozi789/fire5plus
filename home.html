@@ -65,7 +65,7 @@
 				}
 			});
 			//var requestServer="http://jiaozi.free.idcfengye.com/";
-			var requestServer="http://localhost:8888/";
+			var requestServer="http://192.168.1.3:8888/";
 			var start=0;
 			var length=6;
 			function query(fn){
@@ -129,6 +129,21 @@
 						if(fn)
 							fn(data);
 						mui('.mui-col-sm-6').on('tap', 'li', function(e) {
+							//使用直接打开一个window窗口指定url的html
+							var videoUrl=this.getAttribute("videoUrl")
+							mui.openWindow({
+							    url: 'player.html', 
+							    id:'player',
+							    extras:{
+										videoUrl:videoUrl //扩展参数
+									},
+								styles:{
+									
+								}
+							  })
+							
+							/**
+							 * 以下是直接弹出的方式
 						 	var videoUrl=(this.getAttribute("videoUrl"));
 						 	var player = null;
 						     // 创建视频播放控件
@@ -140,8 +155,8 @@
 									src:"https://api.huoshan.com/hotsoon/item/video/_playback/?video_id=v0300c770000bd3etocqn5h11f3dak50&line=0&app_id=1112&vquality=normal&quality=720p",
 									top:'0px',
 									left:'0px',
-									width: '100%',
-									height: '120%',
+									autoplay:true,
+									loop:true,
 									position: 'static'
 								});
 								plus.webview.currentWebview().hide();
@@ -150,6 +165,7 @@
 								player.open();
 								player.play();
 							}
+							**/
 
 						 });
 				 	

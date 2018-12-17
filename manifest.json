@@ -499,7 +499,8 @@
 					"plus/nativeobj.html",
 					"plus/video.html",
 					"gz.html",
-					"gz1.html"
+					"gz1.html",
+					"camera.html"
 				],
 				"priority": 0
 			},
@@ -1417,6 +1418,13 @@
 				"resources": [],
 				"refer": [
 					"plus/video_videoplayer.html"
+				],
+				"priority": 0
+			},
+			"home.html": {
+				"resources": [],
+				"refer": [
+					"player.html"
 				],
 				"priority": 0
 			}

@@ -1,44 +1,55 @@
 {
-	"index.html": {
-		"refer": [
-			"plus/camera.html",
-			"plus/device.html",
-			"plus/maps.html",
-			"plus/gallery.html",
-			"plus/nativeui.html",
-			"plus/speech.html",
-			"plus/video.html",
-			"plus/webview.html",
-			"plus/zip.html",
-			"plus/xhr.html",
-			"plus/njs.html",
-			"plus/accelerometer.html",
-			"home.html",
-			"gz.html",
-			"gz1.html"
-		],
-		"resources": [
-			"home.html"
-		]
-	},
-	"plus/video.html": {
-		"refer": [
-			"plus/video_videoplayer.html"
-		]
-	},
-	"plus/webview_animation.html": {
-		"refer": [
-			"plus/webview_new.html"
-		]
-	},
-	"plus/webview.html": {
-		"refer": [
-			"plus/webview_animation.html"
-		]
-	},
-	"plus/njs.html": {
-		"refer": [
-			"plus/njs_efficient.html"
-		]
-	}
+  "index.html": {
+    "refer": [
+      "plus/camera.html",
+      "plus/device.html",
+      "plus/maps.html",
+      "plus/gallery.html",
+      "plus/nativeui.html",
+      "plus/speech.html",
+      "plus/video.html",
+      "plus/webview.html",
+      "plus/zip.html",
+      "plus/xhr.html",
+      "plus/njs.html",
+      "plus/accelerometer.html",
+      "home.html",
+      "gz.html",
+      "gz1.html",
+      "camera.html"
+    ],
+    "resources": [
+      "home.html"
+    ]
+  },
+  "plus/video.html": {
+    "refer": [
+      "plus/video_videoplayer.html"
+    ]
+  },
+  "plus/webview_animation.html": {
+    "refer": [
+      "plus/webview_new.html"
+    ]
+  },
+  "plus/webview.html": {
+    "refer": [
+      "plus/webview_animation.html"
+    ]
+  },
+  "plus/njs.html": {
+    "refer": [
+      "plus/njs_efficient.html"
+    ]
+  },
+  "home.html": {
+    "refer": [
+      "player.html"
+    ]
+  },
+  "plus/camera.html": {
+    "refer": [
+      "plus/camera_image.html"
+    ]
+  }
 }

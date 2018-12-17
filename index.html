@@ -82,7 +82,15 @@
 			        var targetTab = this.getAttribute('href');
 			        //点击了+号
 			        if(targetTab==null){
-			        	
+			        	mui.openWindow({
+						    url: 'camera.html', 
+						    id:'camera',
+						    extras:{
+								},
+							styles:{
+								
+							}
+						  })
 			        }
 			        console.log(targetTab+"---"+activeTab);
 			        if (targetTab == activeTab) {
